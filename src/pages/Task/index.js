@@ -1,9 +1,31 @@
-import react from "react"
-import { View, Text } from "react-native"
+import React, { useState, useEffect} from "react"
+import { 
+    View, 
+    Text,
+    TouchableOpacity,
+    FlatList, 
+    View,
+ } from "react-native"
 
-export default function Task() { 
+import database from "../../config/firebaseconfig"
+import styles from "./style"
+import {FontAwesome} from "@expo/vector-icons"
+
+export default function Task({ navigation }) {
+    const [task,setTask] = useState ([])
+
+    useEffect(()=>{
+      database.collection("Tasks").onSnapshot((query)=>{
+        const list = []
+        query.forEach((doc)=> {
+            list.push({...doc.data(), id: doc.id})
+        })
+        setTask(list)
+      })  
+    }, [])
+
     return (
-        <view>
+        <view style={styles.container}>
             <Text>
                 Page Tasks
             </Text>
